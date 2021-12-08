@@ -57,13 +57,14 @@ namespace PlanningBoard.Controllers
         [HttpPost]
         public ActionResult EditTask(int boardId, Task task)
         {
-            if (Request["delete"] != null && Request["delete"] == "delete")
+            if (ToDelete)
             {
                 _taskRepository.Delete(task);
                 return RedirectToAction("Index", new{id = boardId}).WithSuccess("Task Was Deleted");
             }
 
-            if (!string.IsNullOrEmpty(task.Owner)) task.Owner = task.Owner.Trim();
+            if (!string.IsNullOrEmpty(task.Owner)) 
+                task.Owner = task.Owner.Trim();
 
             if (task.Id == 0)
             {
@@ -76,36 +77,24 @@ namespace PlanningBoard.Controllers
             return RedirectToAction("Index", new { id = boardId }).WithSuccess("Task Was Saved");
         }
 
+        [HttpGet]
         public ActionResult GetTask(string id)
         {
             var taskId = Convert.ToInt32(id.Substring(5));
             var task = _taskRepository.Get(taskId);
-            var jsonResult = Json(
-                task != null
-                    ? new
-                    {
-                        id = task.Id,
-                        title = task.Title,
-                        text = task.Description,
-                        owner = task.Owner,
-                        columnId = task.ColumnId,
-                        prio = task.Prio,
-                        colorId = task.ColorId
-                    }
-                    : new
-                    {
-                        id = 0,
-                        title = "",
-                        text = "",
-                        owner = "",
-                        columnId = 1,
-                        prio = 100,
-                        colorId = 1
-                    },
-                JsonRequestBehavior.AllowGet);
+            var jsonResult = Json( new {
+                        id = task != null ? task.Id : 0,
+                        title = task != null ? task.Title : "",
+                        text = task != null ? task.Description : "",
+                        owner = task != null ? task.Owner : "",
+                        columnId = task != null ? task.ColumnId : 0,
+                        prio = task != null ? task.Prio : 100,
+                        colorId = task != null ? task.ColorId : 1 }
+            , JsonRequestBehavior.AllowGet);
             return jsonResult;
         }
 
+        [HttpGet]
         public ActionResult GetOwners()
         {
             var owners = _taskRepository.List().Select(t => t.Owner).Distinct().ToArray();

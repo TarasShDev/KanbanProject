@@ -10,7 +10,7 @@ namespace PlanningBoard.Model
 
         public int Add(Task task)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return (int)cnn.Insert(task);
             }
@@ -18,7 +18,7 @@ namespace PlanningBoard.Model
 
         public void Delete(Task task)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 cnn.Delete(task);
             }
@@ -26,7 +26,7 @@ namespace PlanningBoard.Model
 
         public void Update(Task task)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 SqlMapperExtensions.Update(cnn, task);
             }
@@ -34,7 +34,7 @@ namespace PlanningBoard.Model
 
         public Task Get(int id)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Get<Task>(id);
             }
@@ -42,7 +42,7 @@ namespace PlanningBoard.Model
 
         public List<Task> List(int boardId)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<Task>("select t.* from tasks t inner join columns c on c.id = t.columnid where c.boardId == @boardId",
                     new { boardId }).ToList();
@@ -51,7 +51,7 @@ namespace PlanningBoard.Model
 
         public List<Task> List()
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<Task>("select * from tasks").ToList();
             }
