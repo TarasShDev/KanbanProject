@@ -28,7 +28,7 @@ namespace PlanningBoard.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.BoardName = "PlanningBoard.Net";
+            ViewBag.BoardName = "Kanban 4 U";
 
             var user = _userRerpository.GetUser(Username);
             var boards = _boardRepository.List(user.Id);
