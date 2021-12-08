@@ -9,7 +9,7 @@ namespace PlanningBoard.Model
     {
         public List<Column> List(int boardId)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<Column>("select * from columns where boardId = @boardId", new {boardId }).ToList();
             }
@@ -17,7 +17,7 @@ namespace PlanningBoard.Model
 
         public int Add(Column column)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return (int)cnn.Insert(column);
             }

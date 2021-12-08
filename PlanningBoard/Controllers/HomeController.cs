@@ -18,20 +18,12 @@ namespace PlanningBoard.Controllers
             _userRerpository = new UserRepository();
         }
 
-        private string Username
-        {
-            get
-            {
-                return "Johan";// User.Identity.Name.Substring(User.Identity.Name.IndexOf("\\", StringComparison.Ordinal) + 1);
-            }
-        }
-
         public ActionResult Index()
         {
-            ViewBag.BoardName = "PlanningBoard.Net";
+            ViewBag.BoardName = "Kanban 4 U";
 
-            var user = _userRerpository.GetUser(Username);
-            var boards = _boardRepository.List(user.Id);
+            var user = _userRerpository.GetUser();
+            var boards = _boardRepository.List();
             var boardUsers = _boardRepository.BoardUsers(user.Id);
 
             var userboards = boards.Select(board => new UserBoardsViewModel()
@@ -54,7 +46,9 @@ namespace PlanningBoard.Controllers
         {
             if (board.Id == 0)
             {
-                _boardRepository.Add(new Board() {Name = board.Name});
+                int boardId = _boardRepository.Add(new Board() {Name = board.Name});
+                int userId = _userRerpository.GetUser().Id;
+                _boardRepository.Add(new BoardUser() { BoardId = boardId, UserId = userId, IsAdmin = true });
                 return RedirectToAction("Index").WithSuccess("New Board Added");
             }
 

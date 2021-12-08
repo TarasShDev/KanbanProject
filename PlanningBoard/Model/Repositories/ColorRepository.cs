@@ -9,7 +9,7 @@ namespace PlanningBoard.Model
     {
         public List<Color> List()
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<Color>("select * from colors").ToList();
             }
@@ -17,7 +17,7 @@ namespace PlanningBoard.Model
 
         public int Add(Color color)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return (int) cnn.Insert(color);
             }

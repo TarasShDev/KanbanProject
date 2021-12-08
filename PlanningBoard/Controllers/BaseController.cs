@@ -8,5 +8,8 @@ namespace PlanningBoard.Controllers
         {
             ViewBag.Controller = System.Web.HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
         }
+
+        protected bool ToDelete => Request["delete"] != null && Request["delete"] == "delete";
+
     }
 }

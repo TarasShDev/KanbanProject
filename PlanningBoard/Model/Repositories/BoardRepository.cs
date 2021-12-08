@@ -9,7 +9,7 @@ namespace PlanningBoard.Model
     {
         public List<Board> List()
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<Board>("select * from boards").ToList();
             }
@@ -17,7 +17,7 @@ namespace PlanningBoard.Model
 
         public List<Board> List(int userId)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return
                     cnn.Query<Board>(
@@ -28,7 +28,7 @@ namespace PlanningBoard.Model
 
         public List<BoardUser> BoardUsers(int userId)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Query<BoardUser>("select * from boardusers where userid = @userId",new { userId }).ToList();
             }
@@ -36,15 +36,23 @@ namespace PlanningBoard.Model
 
         public int Add(Board board)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return (int) cnn.Insert(board);
             }
         }
 
+        public int Add(BoardUser boardUser)
+        {
+            using (var cnn = GetConnection())
+            {
+                return (int)cnn.Insert(boardUser);
+            }
+        }
+
         public Board Get(int id)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 return cnn.Get<Board>(id);
             }
@@ -52,7 +60,7 @@ namespace PlanningBoard.Model
 
         public void Update(Board board)
         {
-            using (var cnn = GetDbConnection())
+            using (var cnn = GetConnection())
             {
                 SqlMapperExtensions.Update(cnn, board);
             }
